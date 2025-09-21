@@ -32,3 +32,11 @@ Thumbs.db
 .idea/
 *.sublime-workspace
 *.sublime-project
+
+# npm package tarballs
+*.tgz
+
+# Lock files (not needed for npm libraries)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
