@@ -1,0 +1,26 @@
+{
+  "name": "xss-sanitize",
+  "version": "1.0.0",
+  "description": "An up-to-date alternative to the deprecated xss-clean package. Express middleware to sanitize req.body, req.query, and req.params.",
+  "main": "index.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "express",
+    "middleware",
+    "xss",
+    "sanitize",
+    "xss-clean",
+    "security"
+  ],
+  "author": "Mohammad Kalhor",
+  "license": "MIT",
+  "dependencies": {
+    "xss": "^1.0.14"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
