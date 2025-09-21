@@ -22,7 +22,7 @@ const app = express();
 app.use(express.json());         // parse JSON body
 app.use(helmet());               // set secure headers
 app.use(mongoSanitize());        // sanitize MongoDB queries
-app.use(xssSanitize());                  // sanitize all input
+app.use(xssSanitize());          // sanitize all input
 
 app.post('/create', (req, res) => {
   console.log(req.body);         // sanitized input
