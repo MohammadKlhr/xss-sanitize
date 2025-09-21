@@ -75,10 +75,11 @@ app.use(xssSanitize({
 
 ## Tips
 
-- Combine xss-sanitize with other security middleware like helmet() and express-mongo-sanitize() for full protection.
+- Combine xss-sanitize with other security middleware like helmet and express-mongo-sanitize for full protection.
 - Middleware ordering is important: body parser → security middleware → xss-sanitize → route handlers.
 - You can fully control which HTML tags are allowed or removed using whiteList and stripIgnoreTag.
 
 ## License
 MIT
+
 
