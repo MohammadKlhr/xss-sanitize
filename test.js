@@ -1,5 +1,5 @@
 const express = require('express');
-const xssSanitize = require('./index');
+const xssSanitize = require('xss-sanitize');
 
 const app = express();
 app.use(express.json());
