@@ -14,34 +14,53 @@ npm install xss-sanitize
 ```js
 const express = require('express');
 const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
 const xssSanitize = require('xss-sanitize');
 
 const app = express();
 
 app.use(express.json());         // parse JSON body
 app.use(helmet());               // set secure headers
-app.use(mongoSanitize());        // sanitize MongoDB queries
-app.use(xssSanitize());          // sanitize all input
+app.use(xssSanitize());          // sanitize req.body and req.query globally
 
-app.post('/create', (req, res) => {
+app.post('/test/create', (req, res) => {
   console.log(req.body);         // sanitized input
+  console.log(req.raw.body);     // original unsanitized input
   res.send('Saved safely!');
 });
 
-app.listen(3000, () => console.log('Server running'));
+// Route-level param sanitization
+app.get('/test/:id', xssSanitize.paramSanitize(), (req, res) => {
+  console.log(req.params);       // sanitized params
+  console.log(req.raw.params);   // original unsanitized params
+  res.send('Params sanitized!');
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
 ```
 > Note: Always use body parsers (`express.json()` / `express.urlencoded()`) **before** `xssSanitize()`.
 
 ## Example XSS Sanitization
+
 ```js
 // Run the test server
 node test.js
 
-// POST body to localhost/3000/test: { "name": "<script>alert(1)</script>" }
-// After xssSanitize:
-// { "name": "&lt;script&gt;alert(1)&lt;/script&gt;" }
+// Example GET request:
+// URL: /test/<script>alert(1)</script>?search=<script>alert(2)</script> 
+// Note: Some tools like Postman may block <script> in URL params. Test using a browser instead.
+// Body (sent as JSON): { "name": "<script>alert(3)</script>" }
 
+// After hitting the route:
+
+// Sanitized output
+req.body         -> { name: "&lt;script&gt;alert(3)&lt;/script&gt;" }
+req.query        -> { search: "&lt;script&gt;alert(2)&lt;/script&gt;" }
+req.params       -> { testId: "&lt;script&gt;alert(1)&lt;/script&gt;" }
+
+// Raw (unsanitized) values
+req.raw.body     -> { name: "<script>alert(3)</script>" }
+req.raw.query    -> { search: "<script>alert(2)</script>" }
+req.raw.params   -> { testId: "<script>alert(1)</script>" }
 ```
 
 ## Options
@@ -75,11 +94,10 @@ app.use(xssSanitize({
 
 ## Tips
 
-- Combine xss-sanitize with other security middleware like helmet and express-mongo-sanitize for full protection.
+- Combine xss-sanitize with other security middleware like helmet for full protection.
 - Middleware ordering is important: body parser → security middleware → xss-sanitize → route handlers.
-- You can fully control which HTML tags are allowed or removed using whiteList and stripIgnoreTag.
+- Use xssSanitize.paramSanitize() per route to sanitize req.params.
+- Access original, unsanitized values via req.raw.
 
 ## License
-MIT
-
-
+MIT © 2025 Mohammad Kalhor

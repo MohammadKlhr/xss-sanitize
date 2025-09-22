@@ -5,8 +5,16 @@ const app = express();
 app.use(express.json());
 app.use(xssSanitize());
 
-app.post('/test', (req, res) => {
-  res.json(req.body);
+app.get('/test/:testId', xssSanitize.paramSanitize(), (req, res) => {
+  res.json({
+    body: req.body,
+    query: req.query,
+    params: req.params,
+
+    rawBody: req.raw.body,
+    rawQuery: req.raw.query,
+    rawParams: req.raw.params,
+  });
 });
 
 app.listen(3000, () => console.log('Test server running on port 3000'));
