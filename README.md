@@ -29,7 +29,7 @@ app.post('/test/create', (req, res) => {
 });
 
 // Route-level param sanitization
-app.get('/test/:id', xssSanitize.paramSanitize(), (req, res) => {
+app.route('/test/:id').get(xssSanitize.paramSanitize(), (req, res) => {
   console.log(req.params);       // sanitized params
   console.log(req.raw.params);   // original unsanitized params
   res.send('Params sanitized!');
